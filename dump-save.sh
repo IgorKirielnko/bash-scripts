@@ -20,7 +20,7 @@ unzip -o $yy -d /data/db/database/ && sleep 1 && mv $yy /data/db/the_old_dump
 
 find /data/db/database -maxdepth 1 -name '*.doc'|sed 's/.doc//g'>/tmp/dump_save/list_dir
 #sed -i 's/^/mkdir\ /g' /tmp/list_dir;
-#sed -ri "s/....$
+##sed -ri "s/....$"
 #sed -ri "s/$/;/g" /tmp/list_dir;
 #sed -ri "s/2020_.*/2020;/g" /tmp/list_dir;
 #sed -ri "s/2021_.*/2021;/g" /tmp/list_dir;
