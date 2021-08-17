@@ -3,7 +3,7 @@
 #
 #
 #
-find /home/paladin/Documents/GZHI/New -maxdepth 1 -name '*.zip' >/tmp/list-new-zip
+find /home/satana/Documents/GZHI/New -maxdepth 1 -name '*.zip' >/tmp/list-new-zip
 export yyyy=`sed -n 1p /tmp/list-new-zip`
 cp $yyyy /data/db/ -r
 
@@ -40,13 +40,15 @@ export yyy=`sed -n 1p /tmp/log-gzhi-database`
 sleep 2
 mv $yyy /data/db/database/log
 
-
-
-
 #sleep 2
-#find /home/paladin/Documents/GZHI/New -maxdepth 1 -name '*.zip' >/tmp/list-new-zip
+#find /home/satana/Documents/GZHI/New -maxdepth 1 -name '*.zip' >/tmp/list-new-zip
 #export yyyy=`sed -n 1p /tmp/list-new-zip`
 #cp $yyyy /data/db/
 #echo done!
 #find /data/db/ -maxdepth 1 -name '*.zip' -exec rm -f {} \;
 
+
+#mount_data=$(mount|grep data|grep '(ro')
+
+#if [[ mount_data -z ]];
+#then 
