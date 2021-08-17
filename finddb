@@ -1,0 +1,14 @@
+#!/bin/bash
+read aaa
+find /data/db/database/ -type d|grep $aaa >/tmp/dbtmp
+abcc=`wc -l /tmp/dbtmp|tr -d [:alpha:]|tr -d \/`
+while [[ $abcc -gt 0 ]]; 
+do
+aa=`sed -n 1p /tmp/dbtmp`
+ab=`date --rfc-3339=date`
+mkdir /data/db/dump.$ab 2>1&
+cp -r $aa /data/db/dump.$ab 
+sed 1d -i /tmp/dbtmp
+abcc=`wc -l /tmp/dbtmp|tr -d [:alpha:]|tr -d \/`
+done
+ls -l /data/db/dump.$ab 
