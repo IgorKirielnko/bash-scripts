@@ -9,6 +9,7 @@ export yyyy=$(sed -n 1p /tmp/dump_save/list-new-zip)
 #тут не хватает логики, файловов может быть несколько
 #echo $yyyy 
 cp $yyyy /data/db/ -r
+#файлы могут называтся одинаково, но содержание может быть разное, нужно сравнинение по контрольной сумме.
 
 
 find /data/db/ -maxdepth 1 -name "*.zip" >/tmp/dump_save/db_files-zip
@@ -48,8 +49,10 @@ find /data/db/database -maxdepth 1 -name '*.doc'|sed 's/.doc//g'>/tmp/dump_save/
 #echo done!
 #find /data/db/ -maxdepth 1 -name '*.zip' -exec rm -f {} \;
 
-
+#нужна проверка доступности файловой системы, и оповещение если она только для чтения
 #mount_data=$(mount|grep data|grep '(ro')
 
 #if [[ mount_data -z ]];
 #then 
+
+#нужно организовать сохранение файлов в postgres, хранение данных по обращениям, ФИО, адреса, номера обращений, + нужен скрипт выгружающий из db файлы.
