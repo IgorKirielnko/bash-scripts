@@ -5,21 +5,30 @@
 #
 mkdir -p /tmp/dump_save
 find /home/satana/Documents/GZHI/New -maxdepth 1 -name "*.zip" >/tmp/dump_save/list-new-zip
+export countfile=$(wc -l /tmp/dump_save/list-new-zip |tr -d [:alpha:]|tr -d '\/'|tr -d '_'|tr -d '-')
+while [ $countfile -ne 0 ]
+do
 export yyyy=$(sed -n 1p /tmp/dump_save/list-new-zip)
-#тут не хватает логики, файловов может быть несколько
-#echo $yyyy 
+export yyyyx=$(find /data/db/the_old_dump -name $yyyy)
+md5sum $yyyy $yyyyx
+#echo $yyyy
 cp $yyyy /data/db/ -r
+
+sed 1d -i /tmp/dump_save/list-new-zip
+export countfile=$(wc -l /tmp/dump_save/list-new-zip |tr -d [:alpha:]|tr -d '\/'|tr -d '_'|tr -d '-')
+done
+
 #файлы могут называтся одинаково, но содержание может быть разное, нужно сравнинение по контрольной сумме.
 
 
-find /data/db/ -maxdepth 1 -name "*.zip" >/tmp/dump_save/db_files-zip
-export yy=$(sed -n 1p /tmp/dump_save/db_files-zip) 
+#find /data/db/ -maxdepth 1 -name "*.zip" >/tmp/dump_save/db_files-zip
+#export yy=$(sed -n 1p /tmp/dump_save/db_files-zip) 
 #тут тоже не хватает логики файлово может быть несколько.
 #echo $yy
 
-unzip -o $yy -d /data/db/database/ && sleep 1 && mv $yy /data/db/the_old_dump  
+#unzip -o $yy -d /data/db/database/ && sleep 1 && mv $yy /data/db/the_old_dump  
 
-find /data/db/database -maxdepth 1 -name '*.doc'|sed 's/.doc//g'>/tmp/dump_save/list_dir
+#find /data/db/database -maxdepth 1 -name '*.doc'|sed 's/.doc//g'>/tmp/dump_save/list_dir
 #sed -i 's/^/mkdir\ /g' /tmp/list_dir;
 ##sed -ri "s/....$"
 #sed -ri "s/$/;/g" /tmp/list_dir;
@@ -54,7 +63,5 @@ find /data/db/database -maxdepth 1 -name '*.doc'|sed 's/.doc//g'>/tmp/dump_save/
 
 #if [[ mount_data -z ]];
 #then 
-
-#нужно организовать разархивацию и сравнение с базой данных, чтобы каждый раз не сравнить со старыми обращениями
 
 #нужно организовать сохранение файлов в postgres, хранение данных по обращениям, ФИО, адреса, номера обращений, + нужен скрипт выгружающий из db файлы.
