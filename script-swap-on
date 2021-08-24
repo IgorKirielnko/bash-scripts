@@ -1,0 +1,14 @@
+#!/bin/bash 
+swapon -s
+blkid|grep swap >/tmp/file
+grep -E --only-matching "UUID=.{40}" /tmp/file >/tmp/filee
+sed -e 's:UUID=:: ; s:T$::' /tmp/filee|tr -d "\"" > /tmp/fileee
+line=$(wc -l /tmp/fileee|tr -d [:alpha:]|tr -d '\/')
+while [ $line -gt 1 ]
+do
+a=$(sed -n 1p /tmp/fileee)
+swapon -U $a 2>1&
+sed 1d -i /tmp/fileee
+line=$(wc -l /tmp/fileee|tr -d [:alpha:]|tr -d '\/')
+done
+free -g

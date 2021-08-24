@@ -1,0 +1,5 @@
+#!/bin/sh
+chkconfig|grep 3:вкл|grep -v atd|grep -v auditd|grep -v autofs|grep -v blk-availability|grep -v cgconfig|grep -v crond|grep -v cups|grep -v haldaemon|grep -v ip6tables|grep -v iscsi|grep -v iscsid|grep -v ksm|grep -v ksmtuned|grep -v lvm2-monitor|grep -v mcelogd|grep -v mcstrans|grep -v messagebus|grep -v netcf-transaction|grep -v netfs|grep -v network| grep -v nfslock|grep -v ntpd|grep -v portreserve|grep -v postfix| grep -v restorecond|grep -v rpcbind|grep -v rpcgssd|grep -v rsyslog|grep -v sshd|grep -v sysstat|grep -v udev-post|grep -v ztestd|grep -v multipathd|grep -v drweb*|grep -v 'argus-agentd'|grep -v iptables|grep -v acpid;
+virsh list --all;
+multipath -l;
+ifconfig|grep 'inet addr';
