@@ -1,5 +1,8 @@
 #!/bin/bash
+#description:install packages in CLI for WebSphereApplication
+
 export PATH=$PATH:/opt/IBM/InstallationManager/eclipse/tools/
+
 ls /mnt/nfs/kirilenko-test/|sed -r s:\ :\n:g|grep -v full > /tmp/ListRepo
 line=$(wc -l /tmp/ListRepo|cut -c -2)
 while [ $line -gt 0 ]
