@@ -1,0 +1,9 @@
+adwaita-qt
+adwaita-qt4
+gnome-themes-standard
+gnome-themes-extra
+gtk2*
+libswt-pi-gtk
+libgtk-x11-2.0.so.0
+
+libc6
