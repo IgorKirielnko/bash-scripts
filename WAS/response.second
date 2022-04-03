@@ -1,0 +1,12 @@
+configType=remote
+mapWebServerToApplications=true
+wasMachineHostName=dmgr
+webServerConfigFile1=/opt/IBM/HTTPServer/conf/httpd.conf
+webServerDefinition=httpserver1
+webServerHostName=dmgr
+webServerInstallArch=64
+webServerPortNumber=80
+webServerSelected=ihs
+webServerType=IHS
+
+/opt/IBM/WebSphere/Toolbox/WCT/wctcmd.sh -tool pct -defLocPathname /opt/IBM/WebSphere/Plugins -defLocName pluginsecond -createDefinition -response /home/satana/response.second
