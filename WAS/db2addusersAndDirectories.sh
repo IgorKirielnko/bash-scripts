@@ -1,10 +1,10 @@
-#!/bin/bash -v  
+#!/bin/bash  
 groupadd db2iadm1
 groupadd db2fadm1
 groupadd dasadm1
-useradd -G db2iadm1 -p 'o9p0[-]='  -u 2000 -m -d /home/db2inst1 db2inst1
-useradd -G db2fadm1 -p 'o9p0[-]='  -u 2001 -m -d /home/db2fenc1 db2fenc1
-useradd -G dasadm1 -p 'o9p0[-]='  -u 2002 -m -d /home/dasusr1 dasusr1
+useradd -G db2iadm1 -p 'o9p0[-]='  -u 2000 -m db2inst1
+useradd -G db2fadm1 -p 'o9p0[-]='  -u 2001 -m db2fenc1
+useradd -G dasadm1 -p 'o9p0[-]='  -u 2002 -m dasusr1
 useradd -p 'o9p0[-]=' -m cpeuser
 useradd -p 'o9p0[-]=' -m os0user
 useradd -p 'o9p0[-]=' -m os1user
@@ -49,7 +49,8 @@ GRANT SELECT on SYSCAT.INDEXES TO USER cpeuser
 GRANT SELECT on SYSIBM.SYSDUMMY1 TO USER cpeuser
 GRANT USAGE on workload SYSDEFAULTUSERWORKLOAD TO USER cpeuser
 GRANT IMPLICIT_SCHEMA on DATABASE TO USER cpeuser'>"/tmp/GCDDB.db2"
-su - db2inst1 -c 'db2 connect to GCDDB;db2 -f "/tmp/GCDDB.db2";db2 update db cfg using cur_commit on;db2 update db cfg using  APPLHEAPSZ 2560' 
+su - db2inst1 -c 'db2 connect to GCDDB; db2 -f "/tmp/GCDDB.db2"' 
+su - db2inst1 -c 'db2 update db cfg using cur_commit on; db2 update db cfg using  APPLHEAPSZ 2560' 
 sudo -u db2inst1 echo 'drop tablespace userspace1
 CREATE LARGE TABLESPACE SYOS_DATA01_TS PAGESIZE 32 K MANAGED BY AUTOMATIC STORAGE EXTENTSIZE 16 OVERHEAD 10.5 PREFETCHSIZE 16 TRANSFERRATE 0.14 BUFFERPOOL IBMDEFAULTBP
 CREATE LARGE TABLESPACE SYOS_INDEX01_TS PAGESIZE 32 K MANAGED BY AUTOMATIC STORAGE EXTENTSIZE 16 OVERHEAD 10.5 PREFETCHSIZE 16 TRANSFERRATE 0.14 BUFFERPOOL IBMDEFAULTBP
