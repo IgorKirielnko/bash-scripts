@@ -1,41 +1,41 @@
 #!/bin/bash  
-#groupadd db2iadm1
-#groupadd db2fadm1
-#groupadd dasadm1
-#useradd -G db2iadm1 -p 'o9p0[-]='  -u 2000 -m db2inst1
-#useradd -G db2fadm1 -p 'o9p0[-]='  -u 2001 -m db2fenc1
-#useradd -G dasadm1 -p 'o9p0[-]='  -u 2002 -m dasusr1
-#useradd -p 'o9p0[-]=' -m cpeuser
-#useradd -p 'o9p0[-]=' -m os0user
-#useradd -p 'o9p0[-]=' -m os1user
-#useradd -p 'o9p0[-]=' -m refuser
-#chown -R db2fenc1:db2fadm1 /home/db2fenc1
-#chown -R db2inst1:db2iadm1 /home/db2inst1
-#chown -R dasusr1:dasadm1 /home/dasusr1
-#db2=$(find /mnt -name "db2_install"|sed -n 1p)
-#db2home=$(echo '/opt/IBM/db2/V10.5')
-#$db2 -b $db2home -p SERVER -f NOTSAMP -f sysreq
-#bashprofile=$(sudo -u root grep -E ".*bin.*instance" /root/.bashrc|wc -w)
-#if [[ $bashprofile < 1 ]]
-#then
-#sudo -u root echo "export PATH=$PATH:/opt/IBM/db2/V10.5/bin">>"/root/.bashrc"
-#sudo -u root echo "export PATH=$PATH:/opt/IBM/db2/V10.5/instance">>"/root/.bashrc"
-#fi
-#$db2home/bin/db2val
-#mkdir -p /db/DB
-#mkdir -p /db/alog
-#mkdir -p /db/mlog
-#chown -R db2inst1:db2iadm1 /db
-#$db2home/instance/db2icrt -s ese -a SERVER -p 50000 -u db2inst1 db2inst1
-#su - db2inst1 -c 'db2 update dbm cfg using DFTDBPATH /db/DB IMMEDIATE'
-#su - db2inst1 -c 'db2set DB2COMM=tcpip'
-#su - db2inst1 -c 'db2set DB2_WORKLOAD=FILENET_CM'
-#su - db2inst1 -c 'db2set DB2_MINIMIZE_LISTPREFETCH=ON' 
-#su - db2inst1 -c 'db2set DB2_OPTPROFILE=ON' 
-#su - db2inst1 -c 'db2start' 
+groupadd db2iadm1
+groupadd db2fadm1
+groupadd dasadm1
+useradd -G db2iadm1 -p 'o9p0[-]='  -u 2000 -m db2inst1
+useradd -G db2fadm1 -p 'o9p0[-]='  -u 2001 -m db2fenc1
+useradd -G dasadm1 -p 'o9p0[-]='  -u 2002 -m dasusr1
+useradd -p 'o9p0[-]=' -m cpeuser
+useradd -p 'o9p0[-]=' -m os0user
+useradd -p 'o9p0[-]=' -m os1user
+useradd -p 'o9p0[-]=' -m refuser
+chown -R db2fenc1:db2fadm1 /home/db2fenc1
+chown -R db2inst1:db2iadm1 /home/db2inst1
+chown -R dasusr1:dasadm1 /home/dasusr1
+db2=$(find /mnt -name "db2_install"|sed -n 1p)
+db2home=$(echo '/opt/IBM/db2/V10.5')
+$db2 -b $db2home -p SERVER -f NOTSAMP -f sysreq
+bashprofile=$(sudo -u root grep -E ".*bin.*instance" /root/.bashrc|wc -w)
+if [[ $bashprofile < 1 ]]
+then
+sudo -u root echo "export PATH=$PATH:/opt/IBM/db2/V10.5/bin">>"/root/.bashrc"
+sudo -u root echo "export PATH=$PATH:/opt/IBM/db2/V10.5/instance">>"/root/.bashrc"
+fi
+$db2home/bin/db2val
+mkdir -p /db/DB
+mkdir -p /db/alog
+mkdir -p /db/mlog
+chown -R db2inst1:db2iadm1 /db
+$db2home/instance/db2icrt -s ese -a SERVER -p 50000 -u db2inst1 db2inst1
+su - db2inst1 -c 'db2 update dbm cfg using DFTDBPATH /db/DB IMMEDIATE'
+su - db2inst1 -c 'db2set DB2COMM=tcpip'
+su - db2inst1 -c 'db2set DB2_WORKLOAD=FILENET_CM'
+su - db2inst1 -c 'db2set DB2_MINIMIZE_LISTPREFETCH=ON' 
+su - db2inst1 -c 'db2set DB2_OPTPROFILE=ON' 
+su - db2inst1 -c 'db2start' 
 sleep 2
-#su - db2inst1 -c 'db2 create db GCDDB AUTOMATIC STORAGE YES ON "/db/DB" DBPATH ON "/db/DB" USING CODESET UTF-8 TERRITORY RU COLLATE USING SYSTEM PAGESIZE 32768'
-#su - db2inst1 -c 'db2 create db OSDB  AUTOMATIC STORAGE YES ON "/db/DB" DBPATH ON "/db/DB" USING CODESET UTF-8 TERRITORY RU COLLATE USING SYSTEM PAGESIZE 32768'
+su - db2inst1 -c 'db2 create db GCDDB AUTOMATIC STORAGE YES ON "/db/DB" DBPATH ON "/db/DB" USING CODESET UTF-8 TERRITORY RU COLLATE USING SYSTEM PAGESIZE 32768'
+su - db2inst1 -c 'db2 create db OSDB  AUTOMATIC STORAGE YES ON "/db/DB" DBPATH ON "/db/DB" USING CODESET UTF-8 TERRITORY RU COLLATE USING SYSTEM PAGESIZE 32768'
 su - db2inst1 -c 'db2 create db REFDB AUTOMATIC STORAGE YES ON "/db/DB" DBPATH ON "/db/DB" USING CODESET UTF-8 TERRITORY RU COLLATE USING SYSTEM PAGESIZE 32768'
 sudo -u db2inst1 echo 'drop tablespace userspace1
 CREATE LARGE TABLESPACE GCD_TS PAGESIZE 32 K MANAGED BY AUTOMATIC STORAGE EXTENTSIZE 16 OVERHEAD 10.5 PREFETCHSIZE 16 TRANSFERRATE 0.14 BUFFERPOOL IBMDEFAULTBP
