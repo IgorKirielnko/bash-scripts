@@ -1,36 +1,41 @@
-#!/bin/bash -x  
-#groupadd db2iadm1
-#groupadd db2fadm1
-#groupadd dasadm1
-#useradd -G db2iadm1 -p o9p0[-]=  -u 2000 -m -d /home/db2inst1 db2inst1
-#useradd -G db2fadm1 -p o9p0[-]=  -u 2001 -m -d /home/db2fenc1 db2fenc1
-#useradd -G dasadm1 -p o9p0[-]=  -u 2002 -m -d /home/dasusr1 dasusr1
-#useradd -p o9p0[-]= -m cpeuser
-#useradd -p o9p0[-]= -m os0user
-#useradd -p o9p0[-]= -m os1user
-#useradd -p o9p0[-]= -m refuser
-#chown -R db2fenc1:db2fadm1 /home/db2fenc1
-#chown -R db2inst1:db2iadm1 /home/db2inst1
-#chown -R dasusr1:dasadm1 /home/dasusr1
-#db2=$(find /mnt -name "db2_install"|sed -n 1p)
-#$db2 -b /opt/IBM/db2/V10.5/ -p SERVER -f NOTSAMP -f sysreq
-export PATH=$PATH:/opt/IBM/db2/V10.5/bin
-#db2val
-## добавить окно, найти бд и установить, когда нашлась показать путь и переспросить
-#mkdir -p /db/DB
-#mkdir -p /db/alog
-#mkdir -p /db/mlog
-#chown -R db2inst1:db2iadm1 /db
-#sudo /opt/IBM/db2/V10.5/instance/db2icrt -s ese -a SERVER -p 50000 -u db2inst1 db2inst1
-#su - db2inst1 -c 'db2 update dbm cfg using DFTDBPATH /db/DB IMMEDIATE'
-#su - db2inst1 -c 'db2set DB2COMM=tcpip'
-#su - db2inst1 -c 'db2set DB2_WORKLOAD=FILENET_CM'
-#su - db2inst1 -c 'db2set DB2_MINIMIZE_LISTPREFETCH=ON' 
-#su - db2inst1 -c 'db2set DB2_OPTPROFILE=ON' 
-#su - db2inst1 -c 'db2start' 
-#su - db2inst1 -c 'db2 create db GCDDB AUTOMATIC STORAGE YES ON "/db/DB" DBPATH ON "/db/DB" USING CODESET UTF-8 TERRITORY RU COLLATE USING SYSTEM PAGESIZE 32768'
-#su - db2inst1 -c 'db2 create db OSDB  AUTOMATIC STORAGE YES ON "/db/DB" DBPATH ON "/db/DB" USING CODESET UTF-8 TERRITORY RU COLLATE USING SYSTEM PAGESIZE 32768'
-#su - db2inst1 -c 'db2 create db REFDB AUTOMATIC STORAGE YES ON "/db/DB" DBPATH ON "/db/DB" USING CODESET UTF-8 TERRITORY RU COLLATE USING SYSTEM PAGESIZE 32768'
+#!/bin/bash -v  
+groupadd db2iadm1
+groupadd db2fadm1
+groupadd dasadm1
+useradd -G db2iadm1 -p 'o9p0[-]='  -u 2000 -m -d /home/db2inst1 db2inst1
+useradd -G db2fadm1 -p 'o9p0[-]='  -u 2001 -m -d /home/db2fenc1 db2fenc1
+useradd -G dasadm1 -p 'o9p0[-]='  -u 2002 -m -d /home/dasusr1 dasusr1
+useradd -p 'o9p0[-]=' -m cpeuser
+useradd -p 'o9p0[-]=' -m os0user
+useradd -p 'o9p0[-]=' -m os1user
+useradd -p 'o9p0[-]=' -m refuser
+chown -R db2fenc1:db2fadm1 /home/db2fenc1
+chown -R db2inst1:db2iadm1 /home/db2inst1
+chown -R dasusr1:dasadm1 /home/dasusr1
+db2=$(find /mnt -name "db2_install"|sed -n 1p)
+db2home=$(echo '/opt/IBM/db2/V10.5')
+$db2 -b $db2home -p SERVER -f NOTSAMP -f sysreq
+bashprofile=$(sudo -u root grep -E ".*bin.*instance" /root/.bashrc|wc -w)
+if [[ $bashprofile < 1 ]]
+then
+sudo -u root echo "export PATH=$PATH:/opt/IBM/db2/V10.5/bin">>"/root/.bashrc"
+sudo -u root echo "export PATH=$PATH:/opt/IBM/db2/V10.5/instance">>"/root/.bashrc"
+fi
+$db2home/bin/db2val
+mkdir -p /db/DB
+mkdir -p /db/alog
+mkdir -p /db/mlog
+chown -R db2inst1:db2iadm1 /db
+$db2home/instance/db2icrt -s ese -a SERVER -p 50000 -u db2inst1 db2inst1
+su - db2inst1 -c 'db2 update dbm cfg using DFTDBPATH /db/DB IMMEDIATE'
+su - db2inst1 -c 'db2set DB2COMM=tcpip'
+su - db2inst1 -c 'db2set DB2_WORKLOAD=FILENET_CM'
+su - db2inst1 -c 'db2set DB2_MINIMIZE_LISTPREFETCH=ON' 
+su - db2inst1 -c 'db2set DB2_OPTPROFILE=ON' 
+su - db2inst1 -c 'db2start' 
+su - db2inst1 -c 'db2 create db GCDDB AUTOMATIC STORAGE YES ON "/db/DB" DBPATH ON "/db/DB" USING CODESET UTF-8 TERRITORY RU COLLATE USING SYSTEM PAGESIZE 32768'
+su - db2inst1 -c 'db2 create db OSDB  AUTOMATIC STORAGE YES ON "/db/DB" DBPATH ON "/db/DB" USING CODESET UTF-8 TERRITORY RU COLLATE USING SYSTEM PAGESIZE 32768'
+su - db2inst1 -c 'db2 create db REFDB AUTOMATIC STORAGE YES ON "/db/DB" DBPATH ON "/db/DB" USING CODESET UTF-8 TERRITORY RU COLLATE USING SYSTEM PAGESIZE 32768'
 sudo -u db2inst1 echo 'drop tablespace userspace1
 CREATE LARGE TABLESPACE GCD_TS PAGESIZE 32 K MANAGED BY AUTOMATIC STORAGE EXTENTSIZE 16 OVERHEAD 10.5 PREFETCHSIZE 16 TRANSFERRATE 0.14 BUFFERPOOL IBMDEFAULTBP
 CREATE USER TEMPORARY TABLESPACE USER_TS PAGESIZE 32 K MANAGED BY AUTOMATIC STORAGE EXTENTSIZE 8 OVERHEAD 10.5 PREFETCHSIZE 8 TRANSFERRATE 0.14 BUFFERPOOL IBMDEFAULTBP
@@ -88,5 +93,33 @@ GRANT USAGE on workload SYSDEFAULTUSERWORKLOAD TO USER os0user
 GRANT USAGE on workload SYSDEFAULTUSERWORKLOAD TO USER os1user
 GRANT IMPLICIT_SCHEMA on DATABASE TO USER os0user
 GRANT IMPLICIT_SCHEMA on DATABASE TO USER os1user'>"/tmp/OSDB.db2"
-su - db2inst1 -c 'db2 connect to OSDB;db2 -es -f "/tmp/OSDB.db2";db2 update db cfg using cur_commit on;db2 update db cfg using APPLHEAPSZ 2560' 
-#su - db2inst1 -c 'db2 get dbm cfg'
+su - db2inst1 -c 'db2 connect to OSDB;db2 -f "/tmp/OSDB.db2";db2 update db cfg using cur_commit on;db2 update db cfg using APPLHEAPSZ 2560' 
+sudo -u db2inst1 echo 'drop tablespace userspace1
+CREATE LARGE TABLESPACE REF_TS PAGESIZE 32 K MANAGED BY AUTOMATIC STORAGE EXTENTSIZE 16 OVERHEAD 10.5 PREFETCHSIZE 16 TRANSFERRATE 0.14 BUFFERPOOL IBMDEFAULTBP
+CREATE USER TEMPORARY TABLESPACE USER_TS PAGESIZE 32 K MANAGED BY AUTOMATIC STORAGE EXTENTSIZE 8 OVERHEAD 10.5 PREFETCHSIZE 8 TRANSFERRATE 0.14 BUFFERPOOL IBMDEFAULTBP
+GRANT CONNECT ON DATABASE TO USER refuser
+GRANT CREATETAB ON DATABASE TO USER refuser
+GRANT USE OF TABLESPACE REF_TS TO USER refuser
+GRANT USE OF TABLESPACE USER_TS TO USER refuser
+GRANT SELECT on SYSIBM.SYSVERSIONS TO USER refuser
+GRANT SELECT on SYSCAT.DATATYPES TO USER refuser
+GRANT SELECT on SYSCAT.INDEXES TO USER refuser
+GRANT SELECT on SYSIBM.SYSDUMMY1 TO USER refuser
+GRANT USAGE on workload SYSDEFAULTUSERWORKLOAD TO USER refuser
+GRANT IMPLICIT_SCHEMA on DATABASE TO USER refuser'>"/tmp/REFDB.db2"
+su - db2inst1 -c 'db2 connect to REFDB;db2 -f "/tmp/REFDB.db2";db2 update db cfg using cur_commit on;db2 update db cfg using APPLHEAPSZ 2560' 
+mkdir -p /db/alog/db2inst1/GCDDB
+mkdir /db/alog/db2inst1/OSDB
+mkdir /db/alog/db2inst1/REFDB
+mkdir -p /db/mlog/db2inst1/GCDDB
+mkdir /db/mlog/db2inst1/OSDB
+mkdir /db/mlog/db2inst1/REFDB
+chmod -R 0775 /db/alog/db2inst1
+chmod -R 0775 /db/mlog/db2inst1
+chown -R db2inst1:db2iadm1 /db/alog
+chown -R db2inst1:db2iadm1 /db/mlog 
+su - db2inst1 -c 'db2 update db cfg for GCDDB using NEWLOGPATH /db/alog/db2inst1/GCDDB;db2 connect to GCDDB;db2 terminate;db2 deactivate db CGDDB;db2 activate db GCDDB;db2 update db cfg for GCDDB using MIRRORLOGPATH /db/mlog/db2inst1/GCDDB;db2 connect to GCDDB;db2 terminate;db2 deactivate db GCDDB;db2 activate db GCDDB'
+su - db2inst1 -c 'db2 update db cfg for OSDB using NEWLOGPATH /db/alog/db2inst1/OSDB;
+db2 connect to OSDB;db2 terminate;db2 deactivate db OSDB;db2 activate db OSDB;db2 update db cfg for OSDB using MIRRORLOGPATH /db/mlog/db2inst1/OSDB;db2 connect to OSDB;db2 terminate;db2 deactivate db OSDB;db2 activate db OSDB'
+su - db2inst1 -c 'db2 update db cfg for REFDB using NEWLOGPATH /db/alog/db2inst1/REFDB;db2 connect to REFDB;db2 terminate;db2 deactivate db REFDB;db2 activate db REFDB;db2 update db cfg for REFDB using MIRRORLOGPATH /db/mlog/db2inst1/REFDB;db2 connect to REFDB;db2 terminate;db2 deactivate db REFDB;db2 activate db REFDB;db2 force applications all;db2stop;db2start'
+su - db2inst1 -c 'db2 get dbm cfg'
