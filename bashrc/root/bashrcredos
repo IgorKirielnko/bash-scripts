@@ -1,0 +1,22 @@
+# .bashrc
+
+# User specific aliases and functions
+
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+export PATH=/home/satana/.local/bin:/home/satana/bin:/usr/share/Modules/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/IBM/db2/V10.5/bin
+export PATH=/home/satana/.local/bin:/home/satana/bin:/usr/share/Modules/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/IBM/db2/V10.5/instance
+
+alias restartwas="stopnode01; stopnode02; stopmanager; startmanager; startnode01; startnode02"
+alias stopnode02="/opt/IBM/WebSphere/AppServer/profiles/CPE02/bin/stopNode.sh -user wsadmin -password o9p0[-]="
+alias stopnode01="/opt/IBM/WebSphere/AppServer/profiles/CPE01/bin/stopNode.sh -user wsadmin -password o9p0[-]="
+alias startnode02="/opt/IBM/WebSphere/AppServer/profiles/CPE02/bin/startNode.sh"
+alias startnode01="/opt/IBM/WebSphere/AppServer/profiles/CPE01/bin/startNode.sh"
+alias startmanager="/opt/IBM/WebSphere/AppServer/profiles/DMGR/bin/startManager.sh"
+alias stopmanager="/opt/IBM/WebSphere/AppServer/profiles/DMGR/bin/stopManager.sh -user wsadmin -password o9p0[-]="
