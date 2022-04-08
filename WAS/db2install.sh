@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "подключи директорию с базой в /mnt"
+echo -e "\n \n \n подключи директорию с базой в /mnt\nи задать имя хоcта \n \n"
 sleep 5
 cp /root/bash/WAS/ListDependenciesRHEL /run/packages_installed
 line=$(wc -l /run/packages_installed|cut -c -2)
@@ -15,13 +15,13 @@ db2home=$(echo '/opt/IBM/db2/V10.5')
 groupadd db2iadm1
 groupadd db2fadm1
 groupadd dasadm1
-useradd -G db2iadm1 -p 'o9p0[-]='  -u 2000 -m db2inst1
-useradd -G db2fadm1 -p 'o9p0[-]='  -u 2001 -m db2fenc1
-useradd -G dasadm1 -p 'o9p0[-]='  -u 2002 -m dasusr1
-useradd -p 'o9p0[-]=' -m cpeuser
-useradd -p 'o9p0[-]=' -m os0user
-useradd -p 'o9p0[-]=' -m os1user
-useradd -p 'o9p0[-]=' -m refuser
+useradd -G db2iadm1 -p 'b7g7hhp5gc'  -u 2000 -m db2inst1
+useradd -G db2fadm1 -p 'b7g7hhp5gc'  -u 2001 -m db2fenc1
+useradd -G dasadm1 -p 'b7g7hhp5gc'  -u 2002 -m dasusr1
+useradd -p 'b7g7hhp5gc' cpeuser
+useradd -p 'b7g7hhp5gc' os0user
+useradd -p 'b7g7hhp5gc' os1user
+useradd -p 'b7g7hhp5gc' refuser
 chown -R db2fenc1:db2fadm1 /home/db2fenc1
 chown -R db2inst1:db2iadm1 /home/db2inst1
 chown -R dasusr1:dasadm1 /home/dasusr1
@@ -53,7 +53,7 @@ sudo -u root echo 'alias startnode01="/opt/IBM/WebSphere/AppServer/profiles/CPE0
 sudo -u root echo 'alias restartwas="stopnode01; stopnode02; stopmanager; startmanager; startnode01; startnode02"'>>"/root/.bashrc"
 sudo -u root echo 'alias pmt="/opt/IBM/WebSphere/AppServer/bin/ProfileManagement/pmt.sh &"'>>"/root/.bashrc"
 sudo -u root echo 'echo -e "configType=remote\nmapWebServerToApplications=true\nwasMachineHostName=dmgr\nwebServerConfigFile1=/opt/IBM/HTTPServer/conf/httpd.conf\nwebServerDefinition=httpserver1\nwebServerHostName=dmgr\nwebServerInstallArch=64\nwebServerPortNumber=80\nwebServerSelected=ihs\nwebServerType=IHS">/run/wct.tmp'>>/root/.bashrc
-sudo -u root echo 'alias wct="/opt/IBM/WebSphere/Toolbox/WCT/wctcmd.sh -tool pct -defLocPathname /opt/IBM/WebSphere/Plugins -defLocName plugin -createDefinition -response /run/wct.tmp"'>>/root/.bash
+sudo -u root echo 'alias wct="/opt/IBM/WebSphere/Toolbox/WCT/wctcmd.sh -tool pct -defLocPathname /opt/IBM/WebSphere/Plugins -defLocName plugin -createDefinition -response /run/wct.tmp"'>>/root/.bashrc
 fi
 #$db2home/bin/db2val
 $db2home/instance/db2icrt -s ese -a SERVER -p 50000 -u db2inst1 db2inst1
