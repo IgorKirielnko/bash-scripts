@@ -1,4 +1,6 @@
-#!/bin/bash -v 
+#!/bin/bash
+echo "подключи директорию с базой в /mnt"
+sleep 5
 cp /root/bash/WAS/ListDependenciesRHEL /run/packages_installed
 line=$(wc -l /run/packages_installed|cut -c -2)
 while [ $line -gt 0 ]
@@ -49,6 +51,9 @@ sudo -u root echo 'alias startnode02="/opt/IBM/WebSphere/AppServer/profiles/CPE0
 sudo -u root echo 'alias stopnode01="/opt/IBM/WebSphere/AppServer/profiles/CPE01/bin/stopNode.sh -user wsadmin -password o9p0[-]="'>>"/root/.bashrc"
 sudo -u root echo 'alias startnode01="/opt/IBM/WebSphere/AppServer/profiles/CPE01/bin/startNode.sh"'>>"/root/.bashrc"
 sudo -u root echo 'alias restartwas="stopnode01; stopnode02; stopmanager; startmanager; startnode01; startnode02"'>>"/root/.bashrc"
+sudo -u root echo 'alias pmt="/opt/IBM/WebSphere/AppServer/bin/ProfileManagement/pmt.sh &"'>>"/root/.bashrc"
+sudo -u root echo 'echo -e "configType=remote\nmapWebServerToApplications=true\nwasMachineHostName=dmgr\nwebServerConfigFile1=/opt/IBM/HTTPServer/conf/httpd.conf\nwebServerDefinition=httpserver1\nwebServerHostName=dmgr\nwebServerInstallArch=64\nwebServerPortNumber=80\nwebServerSelected=ihs\nwebServerType=IHS">/run/wct.tmp'>>/root/.bashrc
+sudo -u root echo 'alias wct="/opt/IBM/WebSphere/Toolbox/WCT/wctcmd.sh -tool pct -defLocPathname /opt/IBM/WebSphere/Plugins -defLocName plugin -createDefinition -response /run/wct.tmp"'>>/root/.bash
 fi
 #$db2home/bin/db2val
 $db2home/instance/db2icrt -s ese -a SERVER -p 50000 -u db2inst1 db2inst1
