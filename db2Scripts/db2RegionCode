@@ -1,0 +1,15 @@
+#!/bin/bash
+FileList=$(find /home/kirilenkoiko@DC-MGMT.TN.CORP/ -name 'list_id')
+LineNumber=$(wc -l $FileList|cut -c -2)
+while [ $LineNumber -gt 0 ]
+do
+idKA=$(sed -n 1p $FileList|cut -d ';' -f 1)
+REGION=$(sed -n 1p $FileList|cut -d ';' -f 2)
+su - db2inst1 -c "db2 connect to UZDO; db2 UPDATE UZDOUSER.CONTRACTORS SET REGION_CODE = \'$REGION\' WHERE REMOTE_KEY = \'$idKA\' ; db2 CREATE TRIGGER UZDOUSER.REGION_$idKA AFTER INSERT ON UZDOUSER.CONTRACTORS FOR EACH ROW UPDATE UZDOUSER.CONTRACTORS SET REGION_CODE = \'$REGION\' WHERE REMOTE_KEY = \'$idKA\'; db2 SELECT SHORT_NAME, REGION_CODE FROM UZDOUSER.CONTRACTORS WHERE REMOTE_KEY = \'$idKA\' "
+sed -i 1d $FileList
+LineNumber=$(wc -l $FileList|cut -c -2)
+wc -l $FileList
+done
+if [ $LineNumber -eq 0 ]
+then rm -fr $FileList
+fi
