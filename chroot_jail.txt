@@ -1,0 +1,229 @@
+#!/usr/bin/bash
+
+ 
+
+####CFG
+
+chroot_path_str='/home/chroot';
+
+ 
+
+group_str='tp';
+
+jail_user_str='reader';
+
+jail_pass_str='';
+
+ 
+
+mount_dir_str='/opt/IBM/WebSphere/AppServer/profiles/APP/logs';
+
+chroot_mount_point_str='logs';
+
+ 
+
+sshd_conf_str='/etc/ssh/sshd_config';
+
+####CFG
+
+ 
+
+####subs
+
+apps_chroot() { ###NOT needed for sftp
+
+    ldd_res=`ldd $1 | sed -n "s/^.*\(\/lib64\/.*\) .*$/\1/p" && echo "$1" | sort | uniq`;
+
+    for app_str in $ldd_res
+
+    do
+
+    app_path_str=`echo ${app_str%/*} | sed 's/^.//'`;
+
+    app_bin_str=`echo $app_str | sed 's/^.//'`;
+
+    for directory in $app_path_str
+
+    do
+
+        if ! [ -d $chroot_path_str/$app_path_str ]; then
+
+        mkdir -p $chroot_path_str/$app_path_str;
+
+        echo "Directory $app_path_str create";
+
+        fi
+
+    done
+
+    if ! [ -f $chroot_path_str/$app_bin_str ]; then
+
+        cp $app_str $chroot_path_str/$app_path_str;
+
+        echo "Application $app_str copied";
+
+    fi
+
+    done
+
+}
+
+####subs
+
+ 
+
+####checks
+
+if ! [ -d $chroot_path_str ]; then
+
+    mkdir -p $chroot_path_str;
+
+fi
+
+ 
+
+if [ "`ls -ld $chroot_path_str | awk '{print $3}'`" != "root root" ]; then
+
+    chown root:root $chroot_path_str;
+
+    chmod 0755 $chroot_path_str;
+
+fi
+
+####checks
+
+ 
+
+###NOT needed for sftp
+
+#for app_str in /usr/bin/{bash,ls,cat,clear,tail}
+
+#do
+
+#    apps_chroot $app_str;
+
+#done
+
+ 
+
+if [ "`cat /etc/group | grep $group_str | awk -F: '{print $1}'`" != "$group_str" ]; then
+
+    echo '=================================';
+
+    echo 'Create Group';
+
+    date;
+
+    echo;
+
+    groupadd $group_str;
+
+fi
+
+ 
+
+echo "TST: $jail_user_str";
+
+if [ "`cat /etc/passwd | grep $jail_user_str | awk -F: '{print $1}'`" != "$jail_user_str" ]; then
+
+    echo '=================================';
+
+    echo 'Create User';
+
+    date;
+
+    echo;
+
+    useradd -g $group_str -G $group_str $jail_user_str --no-create-home;
+
+    if ! [ -d $chroot_path_str/home/$jail_user_str ]; then
+
+    mkdir -m 770 -p $chroot_path_str/home/$jail_user_str;
+
+    chown $jail_user_str:$group_str $chroot_path_str/home/$jail_user_str;
+
+    usermod -d $chroot_path_str/home/$jail_user_str $jail_user_str;
+
+    fi
+
+fi
+
+ 
+
+echo '=================================';
+
+echo 'Update password';
+
+date;
+
+echo;
+
+echo "$jail_user_str:$jail_pass_str" | chpasswd;
+
+ 
+
+if [ "`cat /etc/ssh/sshd_config | grep "Match User $jail_user_str"`" != "Match User $jail_user_str" ]; then
+
+    echo '=================================';
+
+    echo 'Setup sshd';
+
+    date;
+
+    echo;
+
+    cp $sshd_conf_str $sshd_conf_str.default
+
+    echo $'\n'>> $sshd_conf_str
+
+    echo "Match User $jail_user_str" >> $sshd_conf_str;
+
+    echo "ChrootDirectory $chroot_path_str" >> $sshd_conf_str;
+
+    echo "ForceCommand internal-sftp" >> $sshd_conf_str;
+
+    echo "Restart sshd";
+
+    systemctl restart sshd;
+
+fi
+
+ 
+
+if [ "`mount | grep $mount_dir_str | awk '{print $1}'`" != "$mount_dir_str" ]; then
+
+    echo =================================
+
+    echo "Mount directory $mount_dir_str to $chroot_path_str/$mount_dir_str"
+
+    date
+
+    echo
+
+    if ! [ -d $chroot_path_str/$chroot_mount_point_str ]; then
+
+    mkdir -p $chroot_path_str/$chroot_mount_point_str;
+
+    fi
+
+    mount $mount_dir_str $chroot_path_str/$chroot_mount_point_str -o bind,ro;
+
+fi
+
+ 
+
+echo =================================
+
+echo "Chroot jail is ready"
+
+date
+
+echo
+
+hostname
+
+echo "User:$jail_user_str;
+
+Password:$jail_pass_str";
+
+ 
