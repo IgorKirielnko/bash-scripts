@@ -1,8 +1,15 @@
 [testserver]
 #fedora.dc	ansible_host=192.168.1.25
+[test1]
 redos.dc	ansible_host=192.168.1.35	
-astra.dc	ansible_host=192.168.1.30 	
+#astra.dc	ansible_host=192.168.1.30 	
+
+astra.dc	ansible_host=astra.dc
+[test2]
 centos.dc	ansible_host=192.168.1.20	
 [testserver:vars]
 ansible_user=root
 ansible_ssh_private_key_file=/root/.ssh/id_rsa
+[testgroup:children]
+test1
+test2
