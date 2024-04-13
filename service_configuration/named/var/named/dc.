@@ -1,6 +1,8 @@
 $TTL 604800	;
 dc.  IN SOA redos.dc. root.dc. (1 3H 15M 1W 1D)
 @		IN	NS	redos.
+test.dc.	IN	NS	centos.test.
+centos.test.dc	IN	A	192.168.1.20
 redos		IN	A	192.168.1.35
 astra		IN	A	192.168.1.30
 fedora		IN	A	192.168.1.25

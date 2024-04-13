@@ -1,0 +1,13 @@
+$TTL    3600
+@  IN      SOA     redos.dc. root.dc. (
+                   20060204        ; Serial
+                   3600            ; Refresh
+                   900             ; Retry
+                   3600000         ; Expire
+                   3600 )          ; Minimum
+@  IN      NS      localhost.
+35 IN      PTR     redos
+30 IN      PTR     astra.dc
+#70 IN      PTR     ns03
+#20 IN      PTR     www
+#12 IN      PTR     test
