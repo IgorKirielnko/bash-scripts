@@ -17,4 +17,5 @@ fi
 let OVERALL=$OVERALL+$SUM
 SUM=0
 done
-echo "Overall swap used: $OVERALL KB"
+MBSUM=$(echo $OVERALL/1024|bc)
+echo "Overall swap used: $MBSUM MB"
